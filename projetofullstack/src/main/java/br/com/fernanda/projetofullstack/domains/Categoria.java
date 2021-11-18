@@ -3,12 +3,20 @@ package br.com.fernanda.projetofullstack.domains;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Categoria implements Serializable {
 //Serializable = objetos da classe poderão ser convertidos para uma sequencia de bits, 
 //isso faz com  que os objetos possam ser gravados em arquivos, para trafegar em rede e etc;
 	
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
 	
