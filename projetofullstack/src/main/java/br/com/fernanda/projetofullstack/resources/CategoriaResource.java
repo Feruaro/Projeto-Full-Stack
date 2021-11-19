@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.fernanda.projetofullstack.domains.Categoria;
 import br.com.fernanda.projetofullstack.services.CategoriaService;
 
-
-
 @RestController
 @RequestMapping(path="/categorias")
 public class CategoriaResource {
