@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.fernanda.projetofullstack.domains.Categoria;
 import br.com.fernanda.projetofullstack.domains.Cidade;
+import br.com.fernanda.projetofullstack.domains.Cliente;
+import br.com.fernanda.projetofullstack.domains.Endereco;
 import br.com.fernanda.projetofullstack.domains.Estado;
 import br.com.fernanda.projetofullstack.domains.Produto;
+import br.com.fernanda.projetofullstack.domains.enums.TipoCliente;
 import br.com.fernanda.projetofullstack.repositories.CategoriaRepository;
 import br.com.fernanda.projetofullstack.repositories.CidadeRepository;
+import br.com.fernanda.projetofullstack.repositories.ClienteRepository;
+import br.com.fernanda.projetofullstack.repositories.EnderecoRepository;
 import br.com.fernanda.projetofullstack.repositories.EstadoRepository;
 import br.com.fernanda.projetofullstack.repositories.ProdutoRepository;
 
@@ -27,6 +32,10 @@ public class ProjetofullstackApplication implements CommandLineRunner {
 	private EstadoRepository est_repo;
 	@Autowired
 	private CidadeRepository cid_repo;
+	@Autowired
+	private ClienteRepository cli_repo;
+	@Autowired
+	private EnderecoRepository end_repo;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ProjetofullstackApplication.class, args);
@@ -66,6 +75,18 @@ public class ProjetofullstackApplication implements CommandLineRunner {
 		
 		cid_repo.saveAll(Arrays.asList(c1, c2, c3));
 		
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "12345678912", TipoCliente.PESSOAFISICA);
+        
+		cli1.getTelefone().addAll(Arrays.asList("999638569", "985643625"));
+		
+		Endereco end1 = new Endereco(null, "Rua Flores", "300", "Apto 302", "Jardim", "32650456", cli1, c1);
+		Endereco end2 = new Endereco(null, "AvenidadeMatos", "105", "Sala 800", "Centro", "36589400", cli1, c2);
+		
+		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));
+		
+		cli_repo.saveAll(Arrays.asList(cli1));
+		
+		end_repo.saveAll(Arrays.asList(end1, end2));
 	}
 
 }
