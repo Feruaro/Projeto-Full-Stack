@@ -47,7 +47,7 @@ public class CategoriaService {
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException(id, cat.getNome());
+			throw new DataIntegrityException(id, "Categoria", cat.getNome());
 		}
 	}
 	

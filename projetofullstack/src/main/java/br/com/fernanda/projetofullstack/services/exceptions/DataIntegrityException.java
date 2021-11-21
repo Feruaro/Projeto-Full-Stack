@@ -4,11 +4,11 @@ public class DataIntegrityException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public DataIntegrityException(Integer id, String obj) {
-		super("Não é possível excluir a categoria:" + obj + "! Id: " + id +
-			"\nMotivo: Categoria possui produtos associados");
+	public DataIntegrityException(Integer id, String classe, String obj) {
+		super("Não é possível excluir " + classe + " : " + obj + "! Id: " + id
+				+ " Motivo: possui outros objetos associados");
 	}
-	
+
 	public DataIntegrityException(String message) {
 		super(message);
 	}
@@ -17,7 +17,4 @@ public class DataIntegrityException extends RuntimeException {
 		super(message, cause);
 	}
 
-	
-	
-	
 }
