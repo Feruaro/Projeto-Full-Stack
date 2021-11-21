@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.fernanda.projetofullstack.domains.Categoria;
+import br.com.fernanda.projetofullstack.dto.CategoriaDTO;
 import br.com.fernanda.projetofullstack.repositories.CategoriaRepository;
 import br.com.fernanda.projetofullstack.services.exceptions.DataIntegrityException;
 import br.com.fernanda.projetofullstack.services.exceptions.ObjectNotFoundException;
@@ -53,5 +54,9 @@ public class CategoriaService {
 	public Page<Categoria> findPage(Integer page, Integer linesPerPages, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPages, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
+	}
+	
+	public Categoria FromDTO(CategoriaDTO catDTO) {
+		return new Categoria(catDTO.getId(), catDTO.getNome());
 	}
 }
