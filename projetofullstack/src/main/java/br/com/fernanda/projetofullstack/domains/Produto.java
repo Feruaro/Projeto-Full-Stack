@@ -2,8 +2,10 @@ package br.com.fernanda.projetofullstack.domains;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,29 +21,37 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Produto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
 	private Double valor;
-	
+
 	@JsonBackReference
 	@ManyToMany
-	@JoinTable(name= "produto_categoria", 
-	           joinColumns = @JoinColumn(name= "produto_id"),
-	           inverseJoinColumns = @JoinColumn(name = "categoria_id")
-	)
+	@JoinTable(name = "produto_categoria", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	private List<Categoria> categorias = new ArrayList<>();
+
+	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Produto() {
 	}
-	
-    //categorias não entra no construtor, pois já foi iniciada
+
 	public Produto(Integer id, String nome, Double valor) {
 		this.id = id;
 		this.nome = nome;
 		this.valor = valor;
+	}
+	
+	public List<Pedido> getPedidos(){
+		List<Pedido> lista = new ArrayList<>();
+		
+		for(ItemPedido i : itens) {
+			lista.add(i.getPedido());
+		}
+		
+		return lista;
 	}
 
 	public Integer getId() {
@@ -76,6 +86,14 @@ public class Produto implements Serializable {
 		this.categorias = categorias;
 	}
 
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -92,7 +110,5 @@ public class Produto implements Serializable {
 		Produto other = (Produto) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-	
+
 }
