@@ -10,6 +10,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import br.com.fernanda.projetofullstack.domains.enums.EstadoPagamento;
 
 @Entity
@@ -22,6 +24,7 @@ public abstract class Pagamento implements Serializable {
 	private Integer id;
 	private Integer estado;
 	
+	@JsonBackReference
 	@OneToOne
 	@MapsId  //para o pagamento ter o mesmo id do pedido
 	private Pedido pedido;
