@@ -37,8 +37,14 @@ public class CategoriaService {
 	}
 
 	public Categoria Update(Categoria categoria) {
-		Find(categoria.getId()); // caso não tiver ele retorna o tratamento de excessão
-		return repo.save(categoria);
+		Categoria cat = Find(categoria.getId()); 
+		updateData(cat, categoria);
+		
+		return repo.save(cat);
+	}
+
+	private void updateData(Categoria cat, Categoria categoria) {
+		cat.setNome(categoria.getNome());
 	}
 
 	public void Delete(Integer id) {
