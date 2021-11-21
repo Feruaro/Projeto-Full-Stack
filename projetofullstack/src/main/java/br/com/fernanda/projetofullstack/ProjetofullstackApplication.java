@@ -1,5 +1,6 @@
 package br.com.fernanda.projetofullstack;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import br.com.fernanda.projetofullstack.domains.Cidade;
 import br.com.fernanda.projetofullstack.domains.Cliente;
 import br.com.fernanda.projetofullstack.domains.Endereco;
 import br.com.fernanda.projetofullstack.domains.Estado;
+import br.com.fernanda.projetofullstack.domains.Pagamento;
+import br.com.fernanda.projetofullstack.domains.PagamentoBoleto;
+import br.com.fernanda.projetofullstack.domains.PagamentoCartao;
+import br.com.fernanda.projetofullstack.domains.Pedido;
 import br.com.fernanda.projetofullstack.domains.Produto;
+import br.com.fernanda.projetofullstack.domains.enums.EstadoPagamento;
 import br.com.fernanda.projetofullstack.domains.enums.TipoCliente;
 import br.com.fernanda.projetofullstack.repositories.CategoriaRepository;
 import br.com.fernanda.projetofullstack.repositories.CidadeRepository;
 import br.com.fernanda.projetofullstack.repositories.ClienteRepository;
 import br.com.fernanda.projetofullstack.repositories.EnderecoRepository;
 import br.com.fernanda.projetofullstack.repositories.EstadoRepository;
+import br.com.fernanda.projetofullstack.repositories.PagamentoRepository;
+import br.com.fernanda.projetofullstack.repositories.PedidoRepository;
 import br.com.fernanda.projetofullstack.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -36,6 +44,10 @@ public class ProjetofullstackApplication implements CommandLineRunner {
 	private ClienteRepository cli_repo;
 	@Autowired
 	private EnderecoRepository end_repo;
+	@Autowired
+	private PedidoRepository pedido_repo;
+	@Autowired
+	private PagamentoRepository pag_repo;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ProjetofullstackApplication.class, args);
@@ -87,6 +99,23 @@ public class ProjetofullstackApplication implements CommandLineRunner {
 		cli_repo.saveAll(Arrays.asList(cli1));
 		
 		end_repo.saveAll(Arrays.asList(end1, end2));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, end1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:32"), cli1, end2);
+		
+		Pagamento pagto1 = new PagamentoCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf2.parse("20/10/2017"), null);
+		ped2.setPagamento(pagto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedido_repo.saveAll(Arrays.asList(ped1, ped2));
+		pag_repo.saveAll(Arrays.asList(pagto1, pagto2));
 	}
 
 }
