@@ -10,9 +10,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.com.fernanda.projetofullstack.domains.Cidade;
 import br.com.fernanda.projetofullstack.domains.Cliente;
+import br.com.fernanda.projetofullstack.domains.Endereco;
+import br.com.fernanda.projetofullstack.domains.enums.TipoCliente;
 import br.com.fernanda.projetofullstack.dto.ClienteDTO;
+import br.com.fernanda.projetofullstack.dto.ClienteNewDTO;
 import br.com.fernanda.projetofullstack.repositories.ClienteRepository;
+import br.com.fernanda.projetofullstack.repositories.EnderecoRepository;
 import br.com.fernanda.projetofullstack.services.exceptions.DataIntegrityException;
 import br.com.fernanda.projetofullstack.services.exceptions.ObjectNotFoundException;
 
@@ -21,6 +26,8 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository repo;
+	@Autowired
+	private EnderecoRepository end_repo;
 	
 	public Cliente Find(Integer id) {
 		Optional<Cliente> cliente = repo.findById(id);
@@ -29,6 +36,14 @@ public class ClienteService {
 	
 	public List<Cliente> FindAll() {
 		return repo.findAll();
+	}
+	
+	public Cliente Insert(Cliente cliente) {
+		cliente.setId(null);
+		cliente = repo.save(cliente);
+		end_repo.saveAll(cliente.getEnderecos());
+		
+		return cliente;
 	}
 
 	public Cliente Update(Cliente cliente) {
@@ -60,6 +75,26 @@ public class ClienteService {
 	
 	public Cliente FromDTO(ClienteDTO cliDTO) {
 		return new Cliente(cliDTO.getId(), cliDTO.getNome(), cliDTO.getEmail(), null, null);
+	}
+	
+	public Cliente FromDTO(ClienteNewDTO cliDTO) {
+		Cliente cli = new Cliente(null, cliDTO.getNome(), cliDTO.getEmail(), cliDTO.getCpf_cnpj(), TipoCliente.toEnum(cliDTO.getTipo()));
+		Cidade cid = new Cidade(cliDTO.getCidadeId(), null, null);
+		Endereco end = new Endereco(null, cliDTO.getLogradouro(), cliDTO.getNumero(), cliDTO.getComplemento(), cliDTO.getBairro(), cliDTO.getCep(), cli, cid);
+		
+		cli.getEnderecos().add(end);
+		cli.getTelefone().add(cliDTO.getTelefone1());
+		
+		if(cliDTO.getTelefone2() != null) {
+			cli.getTelefone().add(cliDTO.getTelefone2());
+		}
+		if(cliDTO.getTelefone3() != null) {
+			cli.getTelefone().add(cliDTO.getTelefone3());
+		}
+		
+		
+		
+		return cli;
 	}
 
 }
