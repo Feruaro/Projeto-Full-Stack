@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,8 +24,8 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@GetMapping(path="/{id}")
-	public ResponseEntity<Categoria> Buscar(@PathVariable Integer id) {
-		Categoria cat = service.Buscar(id);
+	public ResponseEntity<Categoria> Find(@PathVariable Integer id) {
+		Categoria cat = service.Find(id);
 		return ResponseEntity.ok().body(cat);
 	}
 	
@@ -33,5 +34,12 @@ public class CategoriaResource {
 		cat = service.Insert(cat);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(cat.getId()).toUri();
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@PutMapping(path = "/{id}")
+	public ResponseEntity<Void> Update(@PathVariable Integer id, @RequestBody Categoria cat){
+		cat.setId(id);
+		cat = service.Update(cat);
+		return ResponseEntity.noContent().build();
 	}
 }
