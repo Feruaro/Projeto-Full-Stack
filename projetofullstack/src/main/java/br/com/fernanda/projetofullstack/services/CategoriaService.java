@@ -3,10 +3,12 @@ package br.com.fernanda.projetofullstack.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.com.fernanda.projetofullstack.domains.Categoria;
 import br.com.fernanda.projetofullstack.repositories.CategoriaRepository;
+import br.com.fernanda.projetofullstack.services.exceptions.DataIntegrityException;
 import br.com.fernanda.projetofullstack.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -26,7 +28,17 @@ public class CategoriaService {
 	}
 	
 	public Categoria Update(Categoria categoria) {
-		Find(categoria.getId());
+		Find(categoria.getId());  //caso não tiver ele retorna o tratamento de excessão
 		return repo.save(categoria);
+	}
+	
+	public void Delete(Integer id) {
+		Categoria cat = Find(id);  //caso não tiver ele retorna o tratamento de excessão
+		
+		try {
+			repo.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException(id, cat.getNome());
+		}
 	}
 }

@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,12 @@ public class CategoriaResource {
 	public ResponseEntity<Void> Update(@PathVariable Integer id, @RequestBody Categoria cat){
 		cat.setId(id);
 		cat = service.Update(cat);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@DeleteMapping(path="/{id}")
+	public ResponseEntity<Categoria> Delete(@PathVariable Integer id) {
+		service.Delete(id);
 		return ResponseEntity.noContent().build();
 	}
 }
