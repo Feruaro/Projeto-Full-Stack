@@ -11,11 +11,13 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import br.com.fernanda.projetofullstack.domains.enums.EstadoPagamento;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 public abstract class Pagamento implements Serializable {
 
 	private static final long serialVersionUID = 1L;
